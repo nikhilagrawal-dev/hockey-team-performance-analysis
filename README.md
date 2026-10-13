@@ -112,16 +112,7 @@ The final production pipeline refitted on all 462 training team-seasons is saved
   - Contains full cross-validation and test metrics, fold splits, scaler statistics, coefficients, intercept, and assumptions.
 - **Fallback Artifacts:** `models/hockey_win_pct_regressor.joblib` and `models/model_metadata.json` (preserved for backward compatibility).
 
-### Learned Model Equation
-
-$$\text{Win\_Pct} = \beta_0 + \beta_1 \cdot z_{\text{GF}} + \beta_2 \cdot z_{\text{GA}} + \beta_3 \cdot z_{\text{Year}}$$
-
-Where:
-- Intercept ($\beta_0$): `0.4477`
-- $\beta_1$ (`Goals_For` coefficient): `+0.0930` (mean: `234.80`, std: `43.81`)
-- $\beta_2$ (`Goals_Against` coefficient): `-0.0854` (mean: `234.80`, std: `45.96`)
-- $\beta_3$ (`Year` coefficient): `+0.0203` (mean: `1998.68`, std: `5.09`)
-
+ 
 ---
 
 ## 6. Interactive Streamlit Dashboard
@@ -207,11 +198,3 @@ The web application [`app.py`](app.py) provides an interactive GUI to explore mo
 ```
 
 ---
-
-## 9. Assumptions and Limitations
-
-1. **Retrospective Estimation, Not Forecasting:** The model estimates a team's final winning percentage based on full-season goal totals and the season year. Because goals for and against cannot be known until all games are played, this pipeline cannot forecast games or future seasons in advance.
-2. **Linear Regression Extrapolation:** Ordinary Least Squares applies constant coefficients and does not enforce hard $[0, 1]$ bounds. Extreme goal inputs outside historical distributions could yield estimates below 0 or above 1.
-3. **Illustrative 82-Game Scaling:** Any 82-game win projection calculated from $\text{Win\_Pct} \times 82$ is strictly an illustrative reference metric assuming an 82-game schedule without overtime point inflation.
-4. **Historical Era & Rule Changes:** The dataset spans 1990–2011. Changes in NHL overtime rules (e.g., introduction of the 4-on-4 overtime and the shootout in 2005) alter goal distributions and point systems over time.
-5. **Serial Correlation:** Model residuals exhibit mild positive serial correlation across consecutive team-seasons (Durbin-Watson $\approx 1.08$), reflecting roster continuity.
