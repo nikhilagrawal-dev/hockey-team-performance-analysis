@@ -1,0 +1,51 @@
+{
+  "target_column": "Win_Pct",
+  "feature_columns": [
+    "Goals_For",
+    "Goals_Against",
+    "Year"
+  ],
+  "model_type": "LinearRegression",
+  "model_parameters": {
+    "copy_X": true,
+    "fit_intercept": true,
+    "n_jobs": null,
+    "positive": false,
+    "tol": 1e-06
+  },
+  "evaluation_strategy": {
+    "split_type": "Chronological (temporal)",
+    "train_years": "1990\u20132007",
+    "test_years": "2008\u20132011",
+    "train_rows": 462,
+    "test_rows": 120,
+    "cv_method": "TimeSeriesSplit(n_splits=5) on training data only",
+    "random_seed": 42
+  },
+  "cv_metrics": {
+    "cv_mae": 0.0363,
+    "cv_rmse": 0.0448,
+    "cv_r2": 0.7762
+  },
+  "test_metrics": {
+    "test_mae": 0.0264,
+    "test_rmse": 0.0332,
+    "test_r2": 0.8397
+  },
+  "preprocessing": "StandardScaler fitted on training data (or training fold), applied identically to validation/test data",
+  "leakage_exclusions": [
+    "Wins",
+    "Losses",
+    "OT_Losses",
+    "Goal_Diff",
+    "Goal_Difference"
+  ],
+  "assumptions_and_limitations": [
+    "Win_Pct is treated as a continuous target; the model does not enforce the [0, 1] boundary.",
+    "The model is trained on team-season aggregates, not game-by-game data.",
+    "Year is included as a numeric feature to capture structural era effects (expansion, rule changes).",
+    "Because Goals_For and Goals_Against are end-of-season totals, this model cannot be used for mid-season in-game prediction.",
+    "Positive serial autocorrelation exists in residuals (noted in Practical 7 of the statistical analysis section); the chronological split partially accounts for this by separating seasons temporally.",
+    "The dataset covers 1990\u20132011 only; performance in eras outside this window may not generalise."
+  ]
+}

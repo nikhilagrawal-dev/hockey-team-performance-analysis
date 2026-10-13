@@ -1,0 +1,178 @@
+{
+  "target_column": "Win_Pct",
+  "feature_columns": [
+    "Goals_For",
+    "Goals_Against",
+    "Year"
+  ],
+  "feature_order_note": "Input to predict() must be a DataFrame with columns in this exact order.",
+  "model_type": "LinearRegression",
+  "model_parameters": {
+    "copy_X": true,
+    "fit_intercept": true,
+    "n_jobs": null,
+    "positive": false,
+    "tol": 1e-06
+  },
+  "preprocessing": "StandardScaler fitted on training-period data only (1990-2007). Applied identically to test data.",
+  "selection_criterion": "Lowest mean CV RMSE across 5 season-aware expanding-window folds.",
+  "evaluation_strategy": {
+    "split_type": "Chronological holdout with season-aware expanding-window CV",
+    "train_period": "1990\u20132007",
+    "test_period": "2008\u20132011",
+    "train_rows": 462,
+    "test_rows": 120,
+    "cv_method": "Custom season-aware expanding-window (5 folds, 2 validation seasons each)",
+    "cv_note": "2004 absent from all folds (NHL season cancelled due to labour lockout).",
+    "random_seed": 42,
+    "folds": [
+      {
+        "fold": 1,
+        "train_years": [
+          1990,
+          1991,
+          1992,
+          1993,
+          1994,
+          1995,
+          1996
+        ],
+        "val_years": [
+          1997,
+          1998
+        ],
+        "train_rows": 171,
+        "val_rows": 53,
+        "val_rmse": 0.0327
+      },
+      {
+        "fold": 2,
+        "train_years": [
+          1990,
+          1991,
+          1992,
+          1993,
+          1994,
+          1995,
+          1996,
+          1997,
+          1998
+        ],
+        "val_years": [
+          1999,
+          2000
+        ],
+        "train_rows": 224,
+        "val_rows": 58,
+        "val_rmse": 0.0359
+      },
+      {
+        "fold": 3,
+        "train_years": [
+          1990,
+          1991,
+          1992,
+          1993,
+          1994,
+          1995,
+          1996,
+          1997,
+          1998,
+          1999,
+          2000
+        ],
+        "val_years": [
+          2001,
+          2002
+        ],
+        "train_rows": 282,
+        "val_rows": 60,
+        "val_rmse": 0.0292
+      },
+      {
+        "fold": 4,
+        "train_years": [
+          1990,
+          1991,
+          1992,
+          1993,
+          1994,
+          1995,
+          1996,
+          1997,
+          1998,
+          1999,
+          2000,
+          2001,
+          2002
+        ],
+        "val_years": [
+          2003,
+          2005
+        ],
+        "train_rows": 342,
+        "val_rows": 60,
+        "val_rmse": 0.0587
+      },
+      {
+        "fold": 5,
+        "train_years": [
+          1990,
+          1991,
+          1992,
+          1993,
+          1994,
+          1995,
+          1996,
+          1997,
+          1998,
+          1999,
+          2000,
+          2001,
+          2002,
+          2003,
+          2005
+        ],
+        "val_years": [
+          2006,
+          2007
+        ],
+        "train_rows": 402,
+        "val_rows": 60,
+        "val_rmse": 0.0507
+      }
+    ]
+  },
+  "cv_metrics": {
+    "cv_mae_mean": 0.0342,
+    "cv_mae_sd": 0.0096,
+    "cv_rmse_mean": 0.0414,
+    "cv_rmse_sd": 0.0113,
+    "cv_r2_mean": 0.8038,
+    "cv_r2_sd": 0.1079,
+    "sd_note": "Standard deviations reflect variation across 5 folds, not confidence intervals."
+  },
+  "test_metrics": {
+    "test_mae": 0.0264,
+    "test_rmse": 0.0332,
+    "test_r2": 0.8397
+  },
+  "cv_to_test_rmse_diff": -0.0082,
+  "cv_to_test_diff_note": "Signed difference: test RMSE minus mean CV RMSE. Negative = better on test than CV average.",
+  "leakage_exclusions": [
+    "Wins",
+    "Losses",
+    "OT_Losses",
+    "Goal_Diff",
+    "Goal_Difference"
+  ],
+  "assumptions_and_limitations": [
+    "Win_Pct is treated as a continuous regression target; the pipeline does not clip predictions to [0, 1].",
+    "Features (Goals_For, Goals_Against, Year) are all end-of-season totals; mid-season or pre-season prediction is not supported.",
+    "OT_Losses is excluded: its 224 missing values (pre-shootout era) are irrelevant since the column is not used.",
+    "Year is included as a numeric feature to capture structural era effects; it is not a proxy for a time index.",
+    "The dataset covers 1990\u20132011 only. Extrapolation beyond this window should be done with caution.",
+    "Positive serial autocorrelation in residuals (Durbin-Watson \u2248 1.08, documented in statistical analysis section) is not corrected by this model.",
+    "The model is the best among five evaluated models under this specific validation strategy. It is not claimed to be globally optimal."
+  ]
+}
