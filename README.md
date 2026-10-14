@@ -1,200 +1,321 @@
-# Hockey Team Performance Analysis
+\# 🏒 Hockey Team Performance Analysis
 
-A statistical inference, machine learning regression, and interactive dashboard project analyzing NHL team-season performance using data collected from [Scrape This Site — Hockey Teams](https://www.scrapethissite.com/pages/forms/).
+An end-to-end data science project combining statistical inference, machine learning regression, and interactive visualization to analyze historical NHL team performance.
 
-The repository implements an end-to-end data science workflow: web scraping, data cleaning, exploratory data analysis (EDA), classical statistical hypothesis testing, time-aware machine learning regression, model explainability, and an interactive Streamlit GUI.
+The project uses historical hockey data from [Scrape This Site — Hockey Teams](https://www.scrapethissite.com/pages/forms/) to explore performance trends, conduct statistical hypothesis testing, evaluate regression models using chronological validation, and deploy an interactive Streamlit dashboard.
+
+## Table of Contents
+
+- [Overview](#-project-overview)
+- [Key Features](#-key-features)
+- [Dataset](#-dataset-overview)
+- [Statistical Analysis](#-statistical-analysis)
+- [Machine Learning](#-machine-learning-methodology)
+- [Model Performance](#-model-performance)
+- [Interactive Dashboard](#-interactive-dashboard)
+- [Tech Stack](#-technology-stack)
+- [Installation](#-installation-and-setup)
+- [Repository Structure](#-repository-structure)
+- [Limitations](#-limitations)
+- [Acknowledgements](#-acknowledgements)
 
 ---
 
-## 1. Project Objectives
+## 📌 Project Overview
 
-1. **Data Acquisition & Curation:** Scrape paginated multi-season NHL records into structured datasets while handling historical era differences (e.g., preserving unrecorded pre-shootout overtime loss values as missing rather than imputing zeros).
-2. **Exploratory & Inferential Statistics:** Apply probability distributions, Central Limit Theorem demonstrations, confidence intervals, correlation analyses, parametric and non-parametric hypothesis tests, ANOVA, and categorical association tests.
-3. **Machine Learning Regression:** Train and evaluate multiple regression pipelines to estimate a team's retrospective end-of-season winning percentage (`Win_Pct`) from season goal aggregates and historical era (`Goals_For`, `Goals_Against`, `Year`).
-4. **Leakage Prevention & Temporal Validation:** Enforce strict feature selection to prevent target leakage and evaluate generalization via chronological holdout and expanding-window cross-validation.
-5. **Interactive Model Deployment:** Provide a Streamlit web application with scenario presets, standardized feature explainability, and statistical model diagnostics.
+This project implements a complete data science workflow, from web scraping and data preparation to statistical analysis, predictive modeling, and interactive deployment.
 
----
+The primary objective is to investigate the relationship between team scoring performance and season winning percentage while demonstrating sound statistical practices and leakage-aware machine learning evaluation.
 
-## 2. Dataset Overview
+### Project Objectives
 
-- **Source:** [https://www.scrapethissite.com/pages/forms/](https://www.scrapethissite.com/pages/forms/)
-- **Total Records:** 582 NHL team-seasons across 21 historical seasons (1990–2011).
-  *(Note: The 2004–2005 NHL season was cancelled due to a labour lockout and is absent from the historical records).*
-- **Raw Dataset (`hockey_team_performance_raw.csv`):** 582 rows, 9 columns.
-- **Cleaned Dataset (`hockey_team_performance_cleaned.csv`):** 582 rows, 11 columns, including engineered features and decade categorizations.
+- Collect and clean historical NHL team-season records.
+- Explore probability distributions, sampling techniques, and performance trends.
+- Apply statistical inference to compare teams and historical eras.
+- Develop and compare multiple regression models.
+- Prevent target leakage and evaluate models using chronological validation.
+- Deploy an interactive dashboard for exploring predictions and feature contributions.
 
-### Key Data Fields
+## ✨ Key Features
 
-| Column | Type | Description |
+- **Data Engineering:** Paginated web scraping, data cleaning, feature engineering, and missing-value analysis.
+- **Statistical Inference:** Confidence intervals, hypothesis testing, ANOVA, correlation analysis, and categorical association tests.
+- **Machine Learning:** Comparison of five regression pipelines using season-aware cross-validation.
+- **Temporal Validation:** Chronological train-test separation and expanding-window validation.
+- **Model Explainability:** Standardized feature contributions and regression diagnostics.
+- **Interactive Deployment:** Streamlit dashboard with scenario presets, performance indicators, and visual explanations.
+
+## 📊 Dataset Overview
+
+**Source:** [Scrape This Site — Hockey Teams](https://www.scrapethissite.com/pages/forms/)
+
+| Dataset Attribute | Details |
+|---|---|
+| Total records | 582 team-seasons |
+| Historical coverage | 1990–2011 |
+| Raw dataset | `hockey_team_performance_raw.csv` |
+| Processed dataset | `hockey_team_performance_cleaned.csv` |
+| Raw columns | 9 |
+| Processed columns | 11 |
+| Prediction target | `Win_Pct` |
+
+The dataset contains team-level regular-season statistics, including wins, losses, goals scored, and goals conceded.
+
+The 2004–2005 NHL season is absent because the season was cancelled due to a labour lockout.
+
+### Key Variables
+
+| Feature | Description |
+|---|---|
+| `Team_Name` | Recorded NHL team name |
+| `Year` | Season start year |
+| `Wins` | Regular-season wins |
+| `Losses` | Regulation losses |
+| `OT_Losses` | Overtime or shootout losses, where recorded |
+| `Win_Pct` | Season winning percentage |
+| `Goals_For` | Total goals scored |
+| `Goals_Against` | Total goals conceded |
+| `Goal_Diff` | Difference between goals scored and conceded |
+| `Decade` | Historical era category |
+| `Goal_Difference` | Additional goal-difference validation feature |
+
+**Data quality consideration:** The 224 missing `OT_Losses` values are preserved to represent the historical period before overtime losses were recorded in the same way as in later seasons. They are not automatically replaced with zero.
+
+## 📈 Statistical Analysis
+
+Notebook: [`Hockey_Team_Performance_Analysis_working.ipynb`](Hockey_Team_Performance_Analysis_working.ipynb)
+
+The statistical analysis explores historical team performance through descriptive statistics, probability, sampling, and inferential methods.
+
+| Analysis Area | Techniques Implemented |
+|---|---|
+| Data preparation | Data cleaning, missing-value analysis, feature engineering |
+| Probability | Empirical probability calculations |
+| Sampling | Simple random, systematic, and stratified sampling |
+| Sampling distributions | Central Limit Theorem simulations |
+| Statistical inference | Confidence intervals, one-sample t-tests, illustrative z-tests |
+| Correlation | Pearson correlation, Spearman rank correlation, covariance |
+| Group comparisons | Independent and paired t-tests |
+| Analysis of variance | One-way ANOVA and Tukey HSD post-hoc testing |
+| Categorical analysis | Chi-square test of independence and Cramér's V |
+
+These analyses investigate the relationships between scoring, winning percentage, historical eras, and categorical performance groups.
+
+## 🤖 Machine Learning Methodology
+
+Notebook: [`Hockey_Team_Performance_ML_working_v4.ipynb`](Hockey_Team_Performance_ML_working_v4.ipynb)
+
+### Prediction Objective
+
+The model estimates a team's season winning percentage using its goal-scoring statistics and season year.
+
+- **Target:** `Win_Pct`
+- **Input features:** `Goals_For`, `Goals_Against`, `Year`
+- **Task:** Supervised regression
+- **Selected model:** Linear Regression
+
+This is a retrospective estimation task using completed-season statistics, not a pre-season prediction or game-level forecasting system.
+
+### Feature Selection and Leakage Prevention
+
+The feature set is deliberately restricted to three variables.
+
+| Feature | Decision | Reason |
 |---|---|---|
-| `Team_Name` | String | Recorded team name (e.g., Boston Bruins, Detroit Red Wings). |
-| `Year` | Integer | Season start year (1990 to 2011). |
-| `Wins` | Integer | Regular season wins. |
-| `Losses` | Integer | Regular season regulation losses. |
-| `OT_Losses` | Float | Overtime / shootout losses (224 missing values preserved for pre-1999 era). |
-| `Win_Pct` | Float | Season winning percentage (Target variable, range: 0.119 to 0.756). |
-| `Goals_For` | Integer | Total regular season goals scored by the team (GF). |
-| `Goals_Against` | Integer | Total regular season goals conceded by the team (GA). |
-| `Goal_Diff` | Integer | Goal differential ($Goals\_For - Goals\_Against$). |
-| `Decade` | String | Categorical era bin (`1990s`, `2000s`, `2010s`). |
-| `Goal_Difference`| Integer | Validated goal difference feature check. |
+| `Goals_For` | Included | Measures offensive production |
+| `Goals_Against` | Included | Measures defensive performance |
+| `Year` | Included | Captures historical changes across seasons |
+| `Wins` | Excluded | Directly determines the target when combined with losses |
+| `Losses` | Excluded | Directly involved in calculating the target |
+| `OT_Losses` | Excluded | Has historical missing values and affects some season win-percentage definitions |
+| `Goal_Diff` | Excluded | Derived from the two goal-related input features |
 
----
+This approach reduces direct target leakage and avoids introducing a redundant feature derived from the selected goal aggregates.
 
-## 3. Statistical Analysis
+### Chronological Train-Test Split
 
-Implemented and documented in the primary statistical notebook [`Hockey_Team_Performance_Analysis_working.ipynb`](Hockey_Team_Performance_Analysis_working.ipynb):
+A time-aware split is used to assess performance on later seasons.
 
-1. **Data Cleaning & Missing Value Handling:** Preservation of 224 missing `OT_Losses` values representing the pre-shootout era where ties existed.
-2. **Probability & Sampling:** Empirical probabilities and demonstration of Simple Random Sampling (SRS), Systematic Sampling, and Stratified Sampling.
-3. **Sampling Distributions:** Verification of the Central Limit Theorem across repeated sample simulations.
-4. **Confidence Intervals & Hypothesis Testing:** One-sample $t$-test and illustrative $Z$-test for team winning percentage against 0.500.
-5. **Correlation & Covariance:** Analysis of Pearson and Spearman rank correlation between goal scoring and winning percentage.
-6. **Group Comparisons & ANOVA:** One-way ANOVA across decades with Tukey HSD post-hoc testing, independent two-sample $t$-tests, and paired $t$-tests.
-7. **Categorical Association:** Chi-square test of independence and Cramér's V effect size across performance tiers and eras.
+| Dataset | Season Range | Team-Season Records |
+|---|---|---:|
+| Training | 1990–2007 | 462 |
+| Testing | 2008–2011 | 120 |
+| Total | 1990–2011, excluding the cancelled season | 582 |
 
----
+### Expanding-Window Cross-Validation
 
-## 4. Machine Learning Methodology
+Five expanding temporal folds are evaluated using the training period. Each validation window contains two available seasons.
 
-Implemented, evaluated, and verified in the primary ML notebook [`Hockey_Team_Performance_ML_working_v4.ipynb`](Hockey_Team_Performance_ML_working_v4.ipynb):
+| Fold | Training Seasons | Validation Seasons |
+|---|---|---|
+| 1 | 1990–1996 | 1997–1998 |
+| 2 | 1990–1998 | 1999–2000 |
+| 3 | 1990–2000 | 2001–2002 |
+| 4 | 1990–2002 | 2003, 2005 |
+| 5 | 1990–2005 | 2006–2007 |
 
-### Prediction Objective & Target
-- **Target Variable:** `Win_Pct` (continuous end-of-season winning percentage in $[0, 1]$).
-- **Scope:** Retrospective performance estimation using completed regular-season goal aggregates.
-- **Important Distinction:** This is **not** a game-level or pre-season forecasting model; regular season goal totals are only finalized at the conclusion of a season.
+The cancelled 2004–2005 season is not represented in the dataset. Feature scaling is fitted within the relevant training folds to prevent information from validation data influencing preprocessing.
 
-### Feature Selection & Target Leakage Prevention
-To prevent data and target leakage, the feature space is strictly constrained:
-- **Included Features (3):** `['Goals_For', 'Goals_Against', 'Year']`
-- **Excluded Features:**
-  - `Wins` and `Losses`: Excluded because they directly reconstruct the target ($Win\_Pct = Wins / (Wins + Losses)$).
-  - `OT_Losses`: Excluded as part of the denominator in post-shootout hockey; missing in 224 of 582 records.
-  - `Goal_Diff`: Excluded as a direct collinear linear combination of $Goals\_For - Goals\_Against$ (Pearson $r \approx 0.88$).
+## 🏆 Model Performance
 
-### Chronological Train / Test Split
-To evaluate temporal generalization rather than random interpolation:
-- **Training Period:** 1990–2007 (462 team-seasons across 17 calendar seasons).
-- **Held-Out Test Period:** 2008–2011 (120 team-seasons across 4 calendar seasons).
+Five regression pipelines were compared using cross-validation and a held-out chronological test set.
 
-### Season-Aware Expanding-Window Cross-Validation
-Cross-validation is conducted strictly on the training set (1990–2007) using 5 expanding temporal folds (2 validation seasons per fold):
-- **Fold 1:** Train 1990–1996 (171 teams) → Val 1997–1998 (53 teams)
-- **Fold 2:** Train 1990–1998 (224 teams) → Val 1999–2000 (58 teams)
-- **Fold 3:** Train 1990–2000 (282 teams) → Val 2001–2002 (60 teams)
-- **Fold 4:** Train 1990–2002 (342 teams) → Val 2003, 2005 (60 teams; 2004 lockout omitted)
-- **Fold 5:** Train 1990–2005 (402 teams) → Val 2006–2007 (60 teams)
+| Model | CV RMSE (Mean ± SD) | Test RMSE | Test R² |
+|---|---:|---:|---:|
+| **Linear Regression** | **0.0414 ± 0.0113** | **0.0332** | **0.8397** |
+| Ridge Regression | 0.0416 ± 0.0112 | 0.0333 | 0.8389 |
+| Lasso Regression | 0.0423 ± 0.0119 | 0.0343 | 0.8295 |
+| Decision Tree Regressor | 0.0661 ± 0.0093 | 0.0567 | 0.5329 |
+| Random Forest Regressor | 0.0514 ± 0.0076 | 0.0427 | 0.7354 |
 
-### Model Comparison & Selection
-Five pipeline architectures (with `StandardScaler` fitted strictly on training folds) were evaluated:
+### Evaluation Metrics
 
-| Model Pipeline | CV MAE (± sd) | CV RMSE (± sd) | CV $R^2$ (± sd) | Test MAE | Test RMSE | Test $R^2$ |
-|---|---|---|---|---|---|---|
-| **Linear Regression (Selected)** | **0.0342 (± 0.0096)** | **0.0414 (± 0.0113)** | **0.8038 (± 0.1079)** | **0.0264** | **0.0332** | **0.8397** |
-| Ridge Regression | 0.0343 (± 0.0096) | 0.0416 (± 0.0112) | 0.8023 (± 0.1076) | 0.0265 | 0.0333 | 0.8389 |
-| Lasso Regression | 0.0349 (± 0.0102) | 0.0423 (± 0.0119) | 0.7939 (± 0.1180) | 0.0274 | 0.0343 | 0.8295 |
-| Decision Tree Regressor | 0.0532 (± 0.0071) | 0.0661 (± 0.0093) | 0.5179 (± 0.1706) | 0.0459 | 0.0567 | 0.5329 |
-| Random Forest Regressor | 0.0417 (± 0.0053) | 0.0514 (± 0.0076) | 0.6974 (± 0.0988) | 0.0340 | 0.0427 | 0.7354 |
+- **RMSE:** Measures prediction error while penalizing larger errors more heavily.
+- **MAE:** Measures the average absolute difference between actual and predicted values.
+- **R²:** Measures the proportion of target variance explained by the model relative to a mean-prediction baseline.
 
-*Selection Decision:* **Linear Regression** was selected based on the lowest mean CV RMSE across the 5 season-aware folds (`0.0414`) and superior test generalization (`Test RMSE = 0.0332`, `Test R² = 0.8397`).
+### Final Model Selection
 
----
+**Linear Regression** was selected because it achieved the lowest mean cross-validation RMSE among the evaluated models and performed best on the chronological test set.
 
-## 5. Saved Model Artifacts
+- Cross-validation RMSE: `0.0414`
+- Test RMSE: `0.0332`
+- Test MAE: `0.0264`
+- Test R²: `0.8397`
 
-The final production pipeline refitted on all 462 training team-seasons is saved in `models/`:
+Since the target is represented as a proportion, the test RMSE of `0.0332` corresponds to approximately **3.32 percentage points** on the winning-percentage scale.
 
-- **Primary Pipeline Artifact:** [`models/hockey_win_pct_regressor_v2.joblib`](models/hockey_win_pct_regressor_v2.joblib)
-  - Components: `StandardScaler()`, `LinearRegression()`.
-  - Feature input order: `['Goals_For', 'Goals_Against', 'Year']`.
-- **Primary Metadata Artifact:** [`models/model_metadata_v2.json`](models/model_metadata_v2.json)
-  - Contains full cross-validation and test metrics, fold splits, scaler statistics, coefficients, intercept, and assumptions.
-- **Fallback Artifacts:** `models/hockey_win_pct_regressor.joblib` and `models/model_metadata.json` (preserved for backward compatibility).
+The results indicate a strong fit on the evaluated historical data. They should not be interpreted as evidence of pre-season forecasting accuracy.
 
- 
----
+## 🖥️ Interactive Dashboard
 
-## 6. Interactive Streamlit Dashboard
+Application: [`app.py`](app.py)
 
-The web application [`app.py`](app.py) provides an interactive GUI to explore model predictions and feature contributions:
+The Streamlit application provides an interactive interface for exploring regression predictions, comparing scenarios, and understanding model behavior.
 
-- **Scenario Presets:** Instant loading for canonical team profiles:
-  - *Test Sample (2009):* 250 GF, 230 GA, 2009 $\rightarrow$ `53.00%` Win Pct
-  - *Top Contender:* 300 GF, 210 GA, 2010 $\rightarrow$ `67.73%` Win Pct
-  - *League Average:* 234 GF, 234 GA, 2006 $\rightarrow$ `47.67%` Win Pct
-  - *Rebuilding Team:* 185 GF, 295 GA, 2003 $\rightarrow$ `24.74%` Win Pct
-- **Dynamic Metric Display:** Estimated Win %, Goal Differential, and qualitative performance tiering.
-- **Comparative Visual Scale:** Custom SVG visual indicator showing predicted Win % positioned against historical minimum (11.9%), mean (45.9%), and maximum (75.6%).
-- **Model Explainability (Collapsed Expander):** Interactive standardized $z$-score breakdown, latex formula display, and Altair feature-contribution bar chart demonstrating how each feature shifts the estimate away from the baseline intercept.
-- **Methodology & Limitations (Collapsed Expander):** Explicitly documents leakage exclusions, retrospective non-forecasting scope, and statistical assumptions.
+### Dashboard Capabilities
 
----
+- **Scenario Presets:** Load predefined team profiles for quick comparisons.
+- **Prediction Metrics:** View estimated winning percentage and goal differential.
+- **Performance Classification:** Explore qualitative performance tiers.
+- **Historical Reference Scale:** Compare predictions with historical minimum, mean, and maximum winning percentages.
+- **Feature Explainability:** Inspect standardized feature values and their contributions to the linear regression estimate.
+- **Methodology and Limitations:** Review model assumptions, feature exclusions, and the retrospective prediction scope.
 
-## 7. Installation & Setup
+### Example Scenarios
+
+| Scenario | Goals For | Goals Against | Year |
+|---|---:|---:|---:|
+| Test Sample | 250 | 230 | 2009 |
+| Top Contender | 300 | 210 | 2010 |
+| League Average | 234 | 234 | 2006 |
+| Rebuilding Team | 185 | 295 | 2003 |
+
+The application loads the saved regression pipeline from the `models/` directory.
+
+## 🛠️ Technology Stack
+
+| Category | Technologies |
+|---|---|
+| Language | Python |
+| Data manipulation | Pandas, NumPy |
+| Statistical analysis | SciPy, statistical testing libraries |
+| Machine learning | Scikit-learn |
+| Visualization | Matplotlib, Seaborn, Altair |
+| Interactive application | Streamlit |
+| Web scraping | Requests, Beautiful Soup |
+| Notebook environment | Jupyter Notebook / JupyterLab |
+| Model persistence | Joblib |
+
+The project dependencies are specified in [`requirements.txt`](requirements.txt).
+
+## 🚀 Installation and Setup
 
 ### Prerequisites
-- Python 3.10+ (recommended: Python 3.10 to 3.12).
 
-### Installation Steps
+- Python 3.10 or later
+- Git
+- A terminal or command-line interface
 
-1. **Clone the repository:**
-   ```bash
-   git clone <repository-url>
-   cd Hockey_Team_Performance_Analysis
-   ```
+### 1. Clone the Repository
 
-2. **Create and activate a virtual environment:**
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate        # On macOS/Linux
-   # venv\Scripts\activate         # On Windows
-   ```
+Replace `<repository-url>` with the actual Git repository URL.
 
-3. **Install dependencies:**
-   ```bash
-   pip install --upgrade pip
-   pip install -r requirements.txt
-   ```
-
-4. **Launch the Streamlit app:**
-   ```bash
-   streamlit run app.py
-   ```
-   Open your browser to `http://localhost:8502` (or the URL printed in the terminal).
-
-5. **Run the Jupyter Notebooks:**
-   ```bash
-   jupyter lab
-   # Or: jupyter notebook
-   ```
-   - Open [`Hockey_Team_Performance_Analysis_working.ipynb`](Hockey_Team_Performance_Analysis_working.ipynb) for the statistical analysis.
-   - Open [`Hockey_Team_Performance_ML_working_v4.ipynb`](Hockey_Team_Performance_ML_working_v4.ipynb) for the machine learning pipeline.
-
----
-
-## 8. Repository Directory Structure
-
-```text
-.
-├── .gitignore                                      # Git ignore rules for environments, caches, and secrets
-├── .streamlit/
-│   └── config.toml                                 # Streamlit custom theme configuration
-├── Hockey_Team_Performance_Analysis_working.ipynb  # Primary statistical analysis notebook (fully executed)
-├── Hockey_Team_Performance_ML_working_v4.ipynb     # Primary ML regression & evaluation notebook (fully executed)
-├── Hockey_Team_Performance_ML_working.ipynb        # Historical ML iteration (initial exploration)
-├── Hockey_Team_Performance_ML_working_v2.ipynb     # Historical ML iteration (v2 pipeline development)
-├── Hockey_Team_Performance_ML_working_v3.ipynb     # Historical ML iteration (v3 refinement)
-├── README.md                                       # Comprehensive project documentation
-├── app.py                                          # Interactive Streamlit web application
-├── hockey_team_performance_cleaned.csv             # Cleaned NHL dataset with engineered features (582 records)
-├── hockey_team_performance_raw.csv                 # Raw scraped NHL dataset (582 records)
-├── models/
-│   ├── hockey_win_pct_regressor_v2.joblib          # Active production trained linear regression pipeline
-│   ├── model_metadata_v2.json                      # Comprehensive evaluation metadata & parameters
-│   ├── hockey_win_pct_regressor.joblib             # Fallback regression pipeline
-│   └── model_metadata.json                         # Fallback evaluation metadata
-└── requirements.txt                                # Reproducible project dependency specification
+```bash
+git clone <repository-url>
+cd Hockey_Team_Performance_Analysis
 ```
 
----
+### 2. Create a Virtual Environment
+
+**macOS / Linux**
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+**Windows**
+
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
+
+### 3. Install Dependencies
+
+```bash
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+### 4. Launch the Dashboard
+
+```bash
+streamlit run app.py
+```
+
+Open the local URL displayed in the terminal. If the application is configured to use port `8502`, the address will be:
+
+`http://localhost:8502`
+
+Otherwise, use the URL provided by Streamlit.
+
+### 5. Explore the Notebooks
+
+Launch JupyterLab:
+
+```bash
+jupyter lab
+```
+
+Open the following notebooks:
+
+- **Statistical analysis:** [`Hockey_Team_Performance_Analysis_working.ipynb`](Hockey_Team_Performance_Analysis_working.ipynb)
+- **Final machine learning pipeline:** [`Hockey_Team_Performance_ML_working_v4.ipynb`](Hockey_Team_Performance_ML_working_v4.ipynb)
+
+The earlier ML notebooks are retained for reference and document previous iterations of the modeling workflow.
+
+## 📂 Repository Structure
+
+```text
+Hockey_Team_Performance_Analysis/
+├── .gitignore
+├── .streamlit/
+│   └── config.toml
+├── Hockey_Team_Performance_Analysis_working.ipynb
+├── Hockey_Team_Performance_ML_working.ipynb
+├── Hockey_Team_Performance_ML_working_v2.ipynb
+├── Hockey_Team_Performance_ML_working_v3.ipynb
+├── Hockey_Team_Performance_ML_working_v4.ipynb
+├── app.py
+├── hockey_team_performance_raw.csv
+├── hockey_team_performance_cleaned.csv
+├── models/
+│   ├── hockey_win_pct_regressor_v2.joblib
+│   ├── model_metadata_v2.json
+│   ├── hockey_win_pct_regressor.joblib
+│   └── model_metadata.json
+├── requirements.txt
+└── README.md
+```
