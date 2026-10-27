@@ -1,4 +1,4 @@
-\# 🏒 Hockey Team Performance Analysis
+# 🏒 Hockey Team Performance Analysis
 
 An end-to-end data science project combining statistical inference, machine learning regression, and interactive visualization to analyze historical NHL team performance.
 
@@ -15,9 +15,8 @@ The project uses historical hockey data from [Scrape This Site — Hockey Teams]
 - [Interactive Dashboard](#-interactive-dashboard)
 - [Tech Stack](#-technology-stack)
 - [Installation](#-installation-and-setup)
+- [Automated Testing](#-automated-testing)
 - [Repository Structure](#-repository-structure)
-- [Limitations](#-limitations)
-- [Acknowledgements](#-acknowledgements)
 
 ---
 
@@ -43,7 +42,7 @@ The primary objective is to investigate the relationship between team scoring pe
 - **Machine Learning:** Comparison of five regression pipelines using season-aware cross-validation.
 - **Temporal Validation:** Chronological train-test separation and expanding-window validation.
 - **Model Explainability:** Standardized feature contributions and regression diagnostics.
-- **Interactive Deployment:** Streamlit dashboard with scenario presets, performance indicators, and visual explanations.
+- **Interactive Deployment:** Streamlit dashboard with scenario presets, sports broadcast hero banner, empirical distributions, and visual explanations.
 
 ## 📊 Dataset Overview
 
@@ -191,16 +190,17 @@ The results indicate a strong fit on the evaluated historical data. They should 
 
 Application: [`app.py`](app.py)
 
-The Streamlit application provides an interactive interface for exploring regression predictions, comparing scenarios, and understanding model behavior.
+The Streamlit application provides an interactive interface for exploring regression predictions, comparing scenarios, and understanding model behavior with a Continental Hockey League broadcast design.
 
 ### Dashboard Capabilities
 
+- **Top Navigation Bar:** Sports league navigation bar with quick view routing.
+- **Hero Analytics Banner:** Panoramic hockey action card with key empirical insights.
+- **Empirical KPI Row:** Real-time statistics across 582 records.
+- **Season Trends:** Historical trajectory from 1990 to 2011.
 - **Scenario Presets:** Load predefined team profiles for quick comparisons.
-- **Prediction Metrics:** View estimated winning percentage and goal differential.
-- **Performance Classification:** Explore qualitative performance tiers.
-- **Historical Reference Scale:** Compare predictions with historical minimum, mean, and maximum winning percentages.
-- **Feature Explainability:** Inspect standardized feature values and their contributions to the linear regression estimate.
-- **Methodology and Limitations:** Review model assumptions, feature exclusions, and the retrospective prediction scope.
+- **Feature Explainability:** Standardized feature contributions and regression diagnostics.
+- **Methodology and Limitations:** Model assumptions, feature exclusions, and retrospective prediction scope.
 
 ### Example Scenarios
 
@@ -239,11 +239,9 @@ The project dependencies are specified in [`requirements.txt`](requirements.txt)
 
 ### 1. Clone the Repository
 
-Replace `<repository-url>` with the actual Git repository URL.
-
 ```bash
-git clone <repository-url>
-cd Hockey_Team_Performance_Analysis
+git clone https://github.com/nikhilagrawal-dev/hockey-team-performance-analysis.git
+cd hockey-team-performance-analysis
 ```
 
 ### 2. Create a Virtual Environment
@@ -275,12 +273,6 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-Open the local URL displayed in the terminal. If the application is configured to use port `8502`, the address will be:
-
-`http://localhost:8502`
-
-Otherwise, use the URL provided by Streamlit.
-
 ### 5. Explore the Notebooks
 
 Launch JupyterLab:
@@ -294,7 +286,22 @@ Open the following notebooks:
 - **Statistical analysis:** [`Hockey_Team_Performance_Analysis_working.ipynb`](Hockey_Team_Performance_Analysis_working.ipynb)
 - **Final machine learning pipeline:** [`Hockey_Team_Performance_ML_working_v4.ipynb`](Hockey_Team_Performance_ML_working_v4.ipynb)
 
-The earlier ML notebooks are retained for reference and document previous iterations of the modeling workflow.
+The earlier ML notebooks are safely archived in `notebooks/archive/` for historical provenance.
+
+## 🧪 Automated Testing
+
+Execute the test suite to verify data integrity, model pipelines, evaluation metrics, and analytical calculations:
+
+```bash
+python -m unittest discover tests -v
+```
+
+All 41 unit tests pass:
+- `test_data.py`: Schema validation, null checks, franchise counting, target bounds.
+- `test_model.py`: Architecture, feature ordering, coefficient verification, contribution breakdown.
+- `test_evaluation.py`: Test RMSE, $R^2$, residual diagnostics, cross-validation metrics.
+- `test_analytics.py`: Team comparison, leaderboard ranking, season filtering, CSV export.
+- `test_stats.py`: One-sample t-test, one-way ANOVA, Chi-Square, Central Limit Theorem simulation.
 
 ## 📂 Repository Structure
 
@@ -303,19 +310,40 @@ Hockey_Team_Performance_Analysis/
 ├── .gitignore
 ├── .streamlit/
 │   └── config.toml
-├── Hockey_Team_Performance_Analysis_working.ipynb
-├── Hockey_Team_Performance_ML_working.ipynb
-├── Hockey_Team_Performance_ML_working_v2.ipynb
-├── Hockey_Team_Performance_ML_working_v3.ipynb
-├── Hockey_Team_Performance_ML_working_v4.ipynb
-├── app.py
-├── hockey_team_performance_raw.csv
-├── hockey_team_performance_cleaned.csv
+├── assets/
+│   └── hockey_hero_banner.jpg
+├── data/
+│   ├── raw/
+│   │   └── hockey_team_performance_raw.csv
+│   └── cleaned/
+│       └── hockey_team_performance_cleaned.csv
 ├── models/
 │   ├── hockey_win_pct_regressor_v2.joblib
 │   ├── model_metadata_v2.json
 │   ├── hockey_win_pct_regressor.joblib
 │   └── model_metadata.json
+├── notebooks/
+│   └── archive/
+│       ├── Hockey_Team_Performance_ML_working.ipynb
+│       ├── Hockey_Team_Performance_ML_working_v2.ipynb
+│       └── Hockey_Team_Performance_ML_working_v3.ipynb
+├── src/
+│   ├── __init__.py
+│   ├── charts.py
+│   ├── config.py
+│   ├── data.py
+│   └── model.py
+├── tests/
+│   ├── __init__.py
+│   ├── test_analytics.py
+│   ├── test_data.py
+│   ├── test_evaluation.py
+│   ├── test_model.py
+│   └── test_stats.py
+├── Hockey_Team_Performance_Analysis_working.ipynb
+├── Hockey_Team_Performance_ML_working_v4.ipynb
+├── app.py
+├── ARCHITECTURE.md
 ├── requirements.txt
 └── README.md
 ```
