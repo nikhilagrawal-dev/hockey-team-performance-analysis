@@ -2052,7 +2052,7 @@ def render_model_evaluation_view(pipeline: Any, metadata: dict, df: pd.DataFrame
                 </div>
                 <div style="height: 0.5rem;"></div>
                 <div class="kpi-card">
-                    <div class="kpi-title">Full Dataset OLS DW (Prac 12)</div>
+                    <div class="kpi-title">Full Dataset OLS DW</div>
                     <div class="kpi-value" style="color: #F59E0B;">{dw_full:.4f}</div>
                     <div class="kpi-sub">Positive Serial Correlation in Time-Series</div>
                 </div>
@@ -2062,7 +2062,7 @@ def render_model_evaluation_view(pipeline: Any, metadata: dict, df: pd.DataFrame
         with d_col2:
             st.markdown("##### Statistical Context & Interpretation of Durbin–Watson")
             st.markdown(f"""
-- **Provenance:** In the full academic dataset OLS regression (`Hockey_Team_Performance_Analysis_working.ipynb`, Practical 12), the Durbin–Watson statistic was reported as **{dw_full:.4f}**. On the chronologically held-out test set, the computed Durbin–Watson statistic is **{dw_test:.4f}**.
+- **Provenance:** In the full academic dataset OLS regression (`Hockey_Team_Performance_Analysis_working.ipynb`), the Durbin–Watson statistic was reported as **{dw_full:.4f}**. On the chronologically held-out test set, the computed Durbin–Watson statistic is **{dw_test:.4f}**.
 - **What Durbin–Watson Evaluates:** DW measures first-order residual autocorrelation ($e_t$ vs. $e_{{t-1}}$). A value near 2.0 indicates no first-order serial correlation, while values substantially below 2.0 indicate positive autocorrelation.
 - **Methodological Impact on Ordinary Regression Assumptions:** In panel datasets where franchises appear across consecutive seasons, roster talent and coaching systems persist across years. This temporal inertia introduces serial correlation in unmodeled residuals.
 - **Scientific Conclusion:** While serial autocorrelation can cause ordinary OLS standard errors to be understated (affecting hypothesis test confidence intervals), it does **not** bias point estimates or invalidate the model's out-of-sample predictive accuracy, as demonstrated by the 0.0332 test RMSE.
@@ -2080,9 +2080,9 @@ def render_statistical_insights_view(df: pd.DataFrame):
     """
     render_header(
         section_badge="Statistical Insights",
-        section_title="Academic SI Lab Showcase & Statistical Inference",
+        section_title="SI Lab Showcase & Statistical Inference",
         section_desc=(
-            "Rigorous presentation layer for the foundational statistical inference practicals "
+            "Rigorous presentation layer for foundational statistical inference analyses "
             "documented in Hockey_Team_Performance_Analysis_working.ipynb."
         )
     )
@@ -2094,11 +2094,11 @@ def render_statistical_insights_view(df: pd.DataFrame):
     practicals = stats_data.get("practicals", [])
 
     tab_clt, tab_ttest, tab_anova, tab_chi2, tab_all = st.tabs([
-        "Central Limit Theorem (Prac 4)",
-        "One-Sample t-Test & CI (Pracs 5 & 6)",
-        "Historical Era ANOVA (Prac 13)",
-        "Chi-Square Association (Prac 16)",
-        "All 16 SI Lab Practicals Index"
+        "Central Limit Theorem",
+        "One-Sample t-Test & CI",
+        "Historical Era ANOVA",
+        "Chi-Square Association",
+        "Statistical Analysis Index"
     ])
 
     # ─────────────────────────────────────────────────────────────────────────
@@ -2161,7 +2161,7 @@ def render_statistical_insights_view(df: pd.DataFrame):
     # TAB 2: ONE-SAMPLE T-TEST & CONFIDENCE INTERVAL
     # ─────────────────────────────────────────────────────────────────────────
     with tab_ttest:
-        st.subheader("One-Sample t-Test & 95% Confidence Interval (Practicals 5 & 6)")
+        st.subheader("One-Sample t-Test & 95% Confidence Interval")
         st.markdown("""
         Evaluates whether the historical mean NHL winning percentage differs significantly from the 
         theoretical reference point of $\\mu_0 = 0.5000$ (an even split in a two-outcome league).
@@ -2225,14 +2225,14 @@ def render_statistical_insights_view(df: pd.DataFrame):
 - **Alternative Hypothesis ($H_1$):** $\\mu \\neq 0.5000$ (Two-sided alternative: mean winning percentage differs from 50.0%).
 - **Test Decision:** Reject $H_0$ ($t = -9.7882, df = 581, p = 4.81 \\times 10^{{-21}}$). The data provides overwhelming statistical evidence that the historical mean winning percentage is less than 0.500.
 - **Substantive Interpretation:** The 95% confidence interval shows we can be 95% confident that the true long-run population mean falls between **{ci_l:.4f}** and **{ci_h:.4f}**.
-- **Statistical Significance vs. Practical Importance:** In large samples ($n = 582$), even trivial numerical deviations achieve low p-values. Here, the ~4.15 percentage point deficit below 0.500 is both statistically significant and practically meaningful: it quantifies the systemic impact of regulation ties throughout the 1990s, where teams earned points for ties without receiving a win in the denominator.
+- **Statistical Significance vs. Substantive Importance:** In large samples ($n = 582$), even trivial numerical deviations achieve low p-values. Here, the ~4.15 percentage point deficit below 0.500 is both statistically significant and substantively meaningful: it quantifies the systemic impact of regulation ties throughout the 1990s, where teams earned points for ties without receiving a win in the denominator.
             """)
 
     # ─────────────────────────────────────────────────────────────────────────
     # TAB 3: HISTORICAL ERA ANOVA
     # ─────────────────────────────────────────────────────────────────────────
     with tab_anova:
-        st.subheader("Historical Era One-Way ANOVA & Post-Hoc Contrasts (Practical 13)")
+        st.subheader("Historical Era One-Way ANOVA & Post-Hoc Contrasts")
         st.markdown("""
         Evaluates whether mean team winning percentage differed across the three historical eras represented in the dataset:
         1990s (Ties permitted), 2000s (OT loss point introduced), and 2010s (Full shootout resolution).
@@ -2303,7 +2303,7 @@ def render_statistical_insights_view(df: pd.DataFrame):
     # TAB 4: CHI-SQUARE TEST OF INDEPENDENCE
     # ─────────────────────────────────────────────────────────────────────────
     with tab_chi2:
-        st.subheader("Chi-Square Test of Independence: Era vs. Performance Tier (Practical 16)")
+        st.subheader("Chi-Square Test of Independence: Era vs. Performance Tier")
         st.markdown("""
         Assesses whether franchise classification into performance tiers (Sub-.450, Competitive, Elite) 
         is statistically independent of the historical decade.
@@ -2381,33 +2381,32 @@ def render_statistical_insights_view(df: pd.DataFrame):
         """, unsafe_allow_html=True)
 
     # ─────────────────────────────────────────────────────────────────────────
-    # TAB 5: ALL 16 PRACTICALS DIRECTORY
+    # TAB 5: STATISTICAL ANALYSIS INDEX
     # ─────────────────────────────────────────────────────────────────────────
     with tab_all:
-        st.subheader("Academic SI Lab Practicals Directory (16 Mapped Topics)")
+        st.subheader("Statistical Analysis Index")
         st.markdown(
             """
-            Comprehensive index mapping all 16 practicals from the foundational academic research notebook 
+            Comprehensive index mapping all foundational analytical topics from the research notebook 
             (`Hockey_Team_Performance_Analysis_working.ipynb`).
             <br>
             <span style="color: #6B8294; font-size: 0.88rem;">
-                Note: Practicals marked <code>Interactive in App</code> feature live exploration widgets. 
-                Remaining practicals are fully preserved, verified, and accessible directly in the original notebook.
+                Note: Topics marked <code>Interactive in App</code> feature live exploration widgets. 
+                Remaining topics are fully preserved, verified, and accessible directly in the original notebook.
             </span>
             """,
             unsafe_allow_html=True
         )
 
-        prac_rows = []
+        topic_rows = []
         for p in practicals:
-            prac_rows.append({
-                "Prac #": f"Prac {p['num']}",
+            topic_rows.append({
                 "Topic": p["topic"],
                 "Tools & Libraries": p["tools"],
                 "Status": p["status"],
                 "Specific Scientific Aim": p["aim"],
             })
-        st.dataframe(pd.DataFrame(prac_rows), use_container_width=True, hide_index=True)
+        st.dataframe(pd.DataFrame(topic_rows), use_container_width=True, hide_index=True)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
